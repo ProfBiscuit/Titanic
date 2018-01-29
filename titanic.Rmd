@@ -1,0 +1,27 @@
+---
+title: "Titanic Stuffs"
+author: "MRB"
+date: "January 28, 2018"
+output: pdf_document
+---
+
+Include relevant packages.
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(arsenal)
+library(summarytools)
+```
+
+```{r data, include=FALSE}
+
+tit <-read_csv(paste(getwd(), "Train.csv", sep = "/"))
+
+titty <- tit %>%
+  dplyr::select(Survived, Pclass, Sex, Age, SibSp, Parch, Fare, Embarked)
+```
+```{r datasummary, include = TRUE, echo = TRUE, results = "asis"}
+dfSummary(titty)
+tab1 <- tableby(data = titty, Survived ~ .)
+summary(tab1, pfootnote=TRUE)
+```
