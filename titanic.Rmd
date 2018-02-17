@@ -8,20 +8,46 @@ output: pdf_document
 Include relevant packages.
 
 ```{r setup, include=FALSE}
-library(tidyverse)
-library(arsenal)
-library(summarytools)
+#read in neccessary packages
+
+ipak <- function(pkg){
+    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+    if (length(new.pkg)) 
+        install.packages(new.pkg, dependencies = TRUE)
+    sapply(pkg, require, character.only = TRUE)
+}
+
+packages <- c("GGally", "tidyverse", "caret", "glmnet", "arsenal", "rpart",
+              "rpart.plot", "olsrr", "earth", "summarytools", "caret", "plotly")
+
+ipak(packages)
 ```
 
 ```{r data, include=FALSE}
 
 tit <-read_csv(paste(getwd(), "Train.csv", sep = "/"))
 
-titty <- tit %>%
+df <- tit %>%
   dplyr::select(Survived, Pclass, Sex, Age, SibSp, Parch, Fare, Embarked)
 ```
+
+
 ```{r datasummary, include = TRUE, echo = TRUE, results = "asis"}
-dfSummary(titty)
-tab1 <- tableby(data = titty, Survived ~ .)
+dfSummary(df)
+tab1 <- tableby(data = df, Survived ~ .)
 summary(tab1, pfootnote=TRUE)
 ```
+
+
+```{r sp1}
+df$Survived <- factor(df$Survived)
+df$Pclass <- factor(df$Pclass)
+
+sp1_color <-  df %>% 
+  ggpairs(mapping=ggplot2::aes(colour = Survived))
+
+sp1_color
+```
+
+
+
